@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Delicate Universe Studio - Customize your birthday experience">
+    <meta name="theme-color" content="#080511">
+    <title>Delicate Universe Studio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Background Effects -->
+    <div id="backgroundEffects" class="background-effects">
+        <div class="aurora"></div>
+        <div class="stars-container"></div>
+        <div class="particles-container"></div>
+    </div>
+
+    <!-- Music Controls -->
+    <div class="music-controls">
+        <button id="musicToggle" type="button" class="music-btn" aria-label="Toggle music">
+            <span class="music-icon">🎵</span>
+        </button>
+        <input id="musicVolume" type="range" min="0" max="100" value="50" class="volume-slider" aria-label="Music volume">
+    </div>
+
+    <!-- Main Studio Container -->
+    <div class="studio-container">
+
+        <!-- Header -->
+        <div class="studio-header">
+            <h1 class="studio-title">Delicate Universe Studio</h1>
+            <p class="studio-subtitle">Customize the experience.</p>
+            <p class="footer-text" style="margin-top: 20px;">
+                <a href="index.html" class="footer-link">← Back to Experience</a>
+            </p>
+        </div>
+
+        <!-- Studio Content -->
+        <div class="studio-content">
+
+            <!-- RECIPIENT NAME SECTION -->
+            <div class="studio-section">
+                <h2 class="studio-section-title">👤 Recipient Name</h2>
+                <div class="studio-field">
+                    <label class="studio-label">Who is this birthday experience for?</label>
+                    <input type="text" id="recipientNameInput" class="studio-input" placeholder="Enter recipient name">
+                    <button type="button" class="studio-action-btn" onclick="updateRecipientName()">Save Name</button>
+                </div>
+            </div>
+
+            <!-- BIRTHDAY MESSAGE SECTION -->
+            <div class="studio-section">
+                <h2 class="studio-section-title">💌 Birthday Message</h2>
+                <div class="studio-field">
+                    <label class="studio-label">Personalized birthday message</label>
+                    <textarea class="studio-birthday-message" id="birthdayMessageInput" placeholder="Enter a warm birthday message"></textarea>
+                    <button type="button" class="studio-action-btn" onclick="updateBirthdayMessage()">Save Message</button>
+                </div>
+            </div>
+
+            <!-- WISHES SECTION -->
+            <div class="studio-section">
+                <h2 class="studio-section-title">✨ Wish Cards</h2>
+                <p class="section-subtitle">Customize the 4 wish cards</p>
+                
+                <div class="studio-grid">
+                    <!-- Wish 1 -->
+                    <div class="studio-field">
+                        <label class="studio-label">Wish 1 - Icon</label>
+                        <input type="text" id="wish0Icon" class="studio-input" placeholder="e.g., 💫" maxlength="2">
+                    </div>
+                    <div class="studio-field">
+                        <label class="studio-label">Wish 1 - Title</label>
+                        <input type="text" id="wish0Title" class="studio-input" placeholder="e.g., Happiness">
+                    </div>
+                    <div class="studio-field">
+                        <label class="studio-label">Wish 1 - Message</label>
+                        <input type="text" id="wish0Back" class="studio-input" placeholder="Wish text">
+                    </div>
+
+                    <!-- Wish 2 -->
+                    <div class="studio-field">
+                        <label class="studio-label">Wish 2 - Icon</label>
+                        <input type="text" id="wish1Icon" class="studio-input" placeholder="e.g., 🎯" maxlength="2">
+                    </div>
+                    <div class="studio-field">
+                        <label class="studio-label">Wish 2 - Title</label>
+                        <input type="text" id="wish1Title" class="studio-input" placeholder="e.g., Success">
+                    </div>
+                    <div class="studio-field">
+                        <label class="studio-label">Wish 2 - Message</label>
+                        <input type="text" id="wish1Back" class="studio-input" placeholder="Wish text">
+                    </div>
+
+                    <!-- Wish 3 -->
+                    <div class="studio-field">
+                        <label class="studio-label">Wish 3 - Icon</label>
+                        <input type="text" id="wish2Icon" class="studio-input" placeholder="e.g., ✨" maxlength="2">
+                    </div>
+                    <div class="studio-field">
+                        <label class="studio-label">Wish 3 - Title</label>
+                        <input type="text" id="wish2Title" class="studio-input" placeholder="e.g., Dreams">
+                    </div>
+                    <div class="studio-field">
+                        <label class="studio-label">Wish 3 - Message</label>
+                        <input type="text" id="wish2Back" class="studio-input" placeholder="Wish text">
+                    </div>
+
+                    <!-- Wish 4 -->
+                    <div class="studio-field">
+                        <label class="studio-label">Wish 4 - Icon</label>
+                        <input type="text" id="wish3Icon" class="studio-input" placeholder="e.g., 💝" maxlength="2">
+                    </div>
+                    <div class="studio-field">
+                        <label class="studio-label">Wish 4 - Title</label>
+                        <input type="text" id="wish3Title" class="studio-input" placeholder="e.g., Memories">
+                    </div>
+                    <div class="studio-field">
+                        <label class="studio-label">Wish 4 - Message</label>
+                        <input type="text" id="wish3Back" class="studio-input" placeholder="Wish text">
+                    </div>
+                </div>
+
+                <button type="button" class="studio-action-btn" onclick="updateWishes()">Save Wishes</button>
+            </div>
+
+            <!-- MEMORIES SECTION -->
+            <div class="studio-section">
+                <h2 class="studio-section-title">🖼️ Memory Gallery</h2>
+                <p class="section-subtitle">6 memory slots (titles, descriptions, and optional images)</p>
+                
+                <div class="studio-grid">
+                    <!-- Memory 1 -->
+                    <div class="studio-field">
+                        <label class="studio-label">Memory 1 - Title</label>
+                        <input type="text" id="memory0Title" class="studio-input" placeholder="e.g., First Moment">
+                    </div>
+                    <div class="studio-field">
+                        <label class="studio-label">Memory 1 - Description</label>
+                        <input type="text" id="memory0Desc" class="studio-input" placeholder="Brief description">
+                    </div>
+                    <div class="studio-field">
+                        <label class="studio-label">Memory 1 - Image URL</label>
+                        <input type="text" id="memory0Image" class="studio-input" placeholder="https://...">
+                    </div>
+
+                    <!-- Memory 2 -->
+                    <div class="studio-field">
+                        <label class="studio-label">Memory 2 - Title</label>
+                        <input type="text" id="memory1Title" class="studio-input" placeholder="e.g., Special Times">
+                    </div>
+                    <div class="studio-field">
+                        <label class="studio-label">Memory 2 - Description</label>
+                        <input type="text" id="memory1Desc" class="studio-input" placeholder="Brief description">
+                    </div>
+                    <div class="studio-field">
+                        <label class="studio-label">Memory 2 - Image URL</label>
+                        <input type="text" id="memory1Image" class="studio-input" placeholder="https://...">
+                    </div>
+
+                    <!-- Memory 3 -->
+                    <div class="studio-field">
+                        <label class="studio-label">Memory 3 - Title</label>
+                        <input type="text" id="memory2Title" class="studio-input" placeholder="e.g., Beautiful Days">
+                    </div>
+                    <div class="studio-field">
+                        <label class="studio-label">Memory 3 - Description</label>
+                        <input type="text" id="memory2Desc" class="studio-input" placeholder="Brief description">
+                    </div>
+                    <div class="studio-field">
+                        <label class="studio-label">Memory 3 - Image URL</label>
+                        <input type="text" id="memory2Image" class="studio-input" placeholder="https://...">
+                    </div>
+
+                    <!-- Memory 4 -->
+                    <div class="studio-field">
+                        <label class="studio-label">Memory 4 - Title</label>
+                        <input type="text" id="memory3Title" class="studio-input" placeholder="e.g., Precious Times">
+                    </div>
+                    <div class="studio-field">
+                        <label class="studio-label">Memory 4 - Description</label>
+                        <input type="text" id="memory3Desc" class="studio-input" placeholder="Brief description">
+                    </div>
+                    <div class="studio-field">
+                        <label class="studio-label">Memory 4 - Image URL</label>
+                        <input type="text" id="memory3Image" class="studio-input" placeholder="https://...">
+                    </div>
+
+                    <!-- Memory 5 -->
+                    <div class="studio-field">
+                        <label class="studio-label">Memory 5 - Title</label>
+                        <input type="text" id="memory4Title" class="studio-input" placeholder="e.g., Happy Memories">
+                    </div>
+                    <div class="studio-field">
+                        <label class="studio-label">Memory 5 - Description</label>
+                        <input type="text" id="memory4Desc" class="studio-input" placeholder="Brief description">
+                    </div>
+                    <div class="studio-field">
+                        <label class="studio-label">Memory 5 - Image URL</label>
+                        <input type="text" id="memory4Image" class="studio-input" placeholder="https://...">
+                    </div>
+
+                    <!-- Memory 6 -->
+                    <div class="studio-field">
+                        <label class="studio-label">Memory 6 - Title</label>
+                        <input type="text" id="memory5Title" class="studio-input" placeholder="e.g., Next Chapter">
+                    </div>
+                    <div class="studio-field">
+                        <label class="studio-label">Memory 6 - Description</label>
+                        <input type="text" id="memory5Desc" class="studio-input" placeholder="Brief description">
+                    </div>
+                    <div class="studio-field">
+                        <label class="studio-label">Memory 6 - Image URL</label>
+                        <input type="text" id="memory5Image" class="studio-input" placeholder="https://...">
+                    </div>
+                </div>
+
+                <button type="button" class="studio-action-btn" onclick="updateMemories()">Save Memories</button>
+            </div>
+
+            <!-- FUTURE WISH SECTION -->
+            <div class="studio-section">
+                <h2 class="studio-section-title">🌟 Future Wish</h2>
+                <div class="studio-field">
+                    <label class="studio-label">Message for tomorrow</label>
+                    <textarea class="studio-future-wish" id="futureWishInput" placeholder="Enter a hopeful message about the future"></textarea>
+                    <button type="button" class="studio-action-btn" onclick="updateFutureWish()">Save Future Wish</button>
+                </div>
+            </div>
+
+            <!-- CLOSING MESSAGE SECTION -->
+            <div class="studio-section">
+                <h2 class="studio-section-title">💫 Closing Message</h2>
+                <div class="studio-field">
+                    <label class="studio-label">Final message</label>
+                    <textarea class="studio-closing-message" id="closingMessageInput" placeholder="Enter the final closing message"></textarea>
+                    <button type="button" class="studio-action-btn" onclick="updateClosingMessage()">Save Closing Message</button>
+                </div>
+            </div>
+
+            <!-- SETTINGS SECTION -->
+            <div class="studio-section">
+                <h2 class="studio-section-title">⚙️ Settings</h2>
+                
+                <div class="studio-settings">
+                    <div class="studio-switch">
+                        <input type="checkbox" id="musicEnabled" class="studio-checkbox" checked>
+                        <label class="studio-switch-label" for="musicEnabled">Enable Background Music</label>
+                    </div>
+
+                    <div class="studio-switch">
+                        <input type="checkbox" id="effectsEnabled" class="studio-checkbox" checked>
+                        <label class="studio-switch-label" for="effectsEnabled">Enable Effects (Confetti, Fireworks)</label>
+                    </div>
+
+                    <div class="studio-switch">
+                        <input type="checkbox" id="reducedMotion" class="studio-checkbox">
+                        <label class="studio-switch-label" for="reducedMotion">Reduced Motion</label>
+                    </div>
+                </div>
+
+                <button type="button" class="studio-action-btn" onclick="updateSettings()">Save Settings</button>
+            </div>
+
+            <!-- PREVIEW SECTION -->
+            <div class="studio-section">
+                <h2 class="studio-section-title">👁️ Preview</h2>
+                
+                <div class="studio-preview">
+                    <div class="studio-preview-item">
+                        <div class="studio-preview-label">Recipient Name</div>
+                        <div class="studio-preview-value" id="previewRecipient">Beautiful</div>
+                    </div>
+
+                    <div class="studio-preview-item">
+                        <div class="studio-preview-label">Birthday Message Preview</div>
+                        <div class="studio-preview-value" id="previewMessage">Message will appear here...</div>
+                    </div>
+
+                    <div class="studio-preview-item">
+                        <div class="studio-preview-label">Wishes Configured</div>
+                        <div class="studio-preview-value" id="previewWishes">4 wishes</div>
+                    </div>
+
+                    <div class="studio-preview-item">
+                        <div class="studio-preview-label">Memories Configured</div>
+                        <div class="studio-preview-value" id="previewMemories">6 memories</div>
+                    </div>
+                </div>
+
+                <a href="index.html" class="studio-action-btn" style="display: inline-block; text-decoration: none; text-align: center;">
+                    🚀 Open Experience
+                </a>
+            </div>
+
+            <!-- ACTIONS SECTION -->
+            <div class="studio-section">
+                <h2 class="studio-section-title">🔄 Actions</h2>
+
+                <button type="button" class="studio-action-btn" onclick="loadAllData()">
+                    ↻ Load Current Data
+                </button>
+
+                <button type="button" class="studio-action-btn secondary" onclick="saveAllData()">
+                    💾 Save All Changes
+                </button>
+
+                <button type="button" class="studio-action-btn danger" onclick="resetAllSettings()">
+                    ⚠️ Reset Everything
+                </button>
+            </div>
+
+            <!-- Footer -->
+            <div style="text-align: center; margin-top: 50px; padding: 30px 0; color: var(--text-muted); border-top: 1px solid var(--border-color);">
+                <p>Delicate Universe Studio • © 2024</p>
+                <p style="font-size: 12px; margin-top: 10px;">
+                    All your customizations are saved locally in your browser.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Hidden audio element for music -->
+    <audio id="backgroundMusic" preload="none">
+        <source src="birthday-music.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Studio Script -->
+    <script>
+        /* ================================================================
+           STUDIO - LOCAL STORAGE & CUSTOMIZATION
+           ================================================================ */
+
+        const STUDIO_CONFIG = {
+            storageKey: 'delicateUniverseData',
+            defaultData: {
+                recipientName: 'Beautiful',
+                birthdayMessage: 'May this new year of your life bring you countless moments worth remembering, dreams worth chasing, and a heart full of joy. You deserve all the beautiful things this world has to offer.',
+                futureWish: 'May the days ahead open doors to things you have always hoped for. May your path be filled with unexpected joy and discoveries that take your breath away.',
+                closingMessage: 'Thank you for being exactly who you are. The world is brighter because you are in it. Here\'s to your most beautiful year yet. Happy Birthday. 🎂✨',
+                wishes: [
+                    { icon: '💫', title: 'Happiness', back: 'May your days be filled with genuine laughter and pure joy.' },
+                    { icon: '🎯', title: 'Success', back: 'May every goal you chase become a victory you celebrate.' },
+                    { icon: '✨', title: 'Dreams', back: 'May your wildest dreams find their way into reality.' },
+                    { icon: '💝', title: 'Memories', back: 'May you create beautiful memories that last a lifetime.' }
+                ],
+                memories: [
+                    { title: 'First Moment', description: 'A cherished beginning', image: '' },
+                    { title: 'Special Times', description: 'Unforgettable moments', image: '' },
+                    { title: 'Beautiful Days', description: 'Shared joy and laughter', image: '' },
+                    { title: 'Precious Times', description: 'Moments to treasure', image: '' },
+                    { title: 'Happy Memories', description: 'Worth remembering forever', image: '' },
+                    { title: 'Next Chapter', description: 'Bright future ahead', image: '' }
+                ],
+                settings: {
+                    music: true,
+                    effects: true,
+                    reducedMotion: false
+                }
+            }
+        };
+
+        // Load data on page init
+        function loadAllData() {
+            try {
+                const stored = localStorage.getItem(STUDIO_CONFIG.storageKey);
+                const data = stored ? JSON.parse(stored) : STUDIO_CONFIG.defaultData;
+
+                // Fill inputs
+                document.getElementById('recipientNameInput').value = data.recipientName || '';
+                document.getElementById('birthdayMessageInput').value = data.birthdayMessage || '';
+                document.getElementById('futureWishInput').value = data.futureWish || '';
+                document.getElementById('closingMessageInput').value = data.closingMessage || '';
+
+                // Load wishes
+                data.wishes.forEach((wish, i) => {
+                    const iconInput = document.getElementById(`wish${i}Icon`);
+                    const titleInput = document.getElementById(`wish${i}Title`);
+                    const backInput = document.getElementById(`wish${i}Back`);
+
+                    if (iconInput) iconInput.value = wish.icon;
+                    if (titleInput) titleInput.value = wish.title;
+                    if (backInput) backInput.value = wish.back;
+                });
+
+                // Load memories
+                data.memories.forEach((mem, i) => {
+                    const titleInput = document.getElementById(`memory${i}Title`);
+                    const descInput = document.getElementById(`memory${i}Desc`);
+                    const imageInput = document.getElementById(`memory${i}Image`);
+
+                    if (titleInput) titleInput.value = mem.title;
+                    if (descInput) descInput.value = mem.description;
+                    if (imageInput) imageInput.value = mem.image || '';
+                });
+
+                // Load settings
+                const musicCheckbox = document.getElementById('musicEnabled');
+                const effectsCheckbox = document.getElementById('effectsEnabled');
+                const reducedMotionCheckbox = document.getElementById('reducedMotion');
+
+                if (musicCheckbox) musicCheckbox.checked = data.settings.music !== false;
+                if (effectsCheckbox) effectsCheckbox.checked = data.settings.effects !== false;
+                if (reducedMotionCheckbox) reducedMotionCheckbox.checked = data.settings.reducedMotion === true;
+
+                updatePreview(data);
+            } catch (e) {
+                console.error('Load error:', e);
+            }
+        }
+
+        // Save data
+        function saveAllData() {
+            try {
+                const data = {
+                    recipientName: document.getElementById('recipientNameInput').value || 'Beautiful',
+                    birthdayMessage: document.getElementById('birthdayMessageInput').value || STUDIO_CONFIG.defaultData.birthdayMessage,
+                    futureWish: document.getElementById('futureWishInput').value || STUDIO_CONFIG.defaultData.futureWish,
+                    closingMessage: document.getElementById('closingMessageInput').value || STUDIO_CONFIG.defaultData.closingMessage,
+                    wishes: [],
+                    memories: [],
+                    settings: {
+                        music: document.getElementById('musicEnabled').checked,
+                        effects: document.getElementById('effectsEnabled').checked,
+                        reducedMotion: document.getElementById('reducedMotion').checked
+                    }
+                };
+
+                // Collect wishes
+                for (let i = 0; i < 4; i++) {
+                    data.wishes.push({
+                        icon: document.getElementById(`wish${i}Icon`).value || STUDIO_CONFIG.defaultData.wishes[i].icon,
+                        title: document.getElementById(`wish${i}Title`).value || STUDIO_CONFIG.defaultData.wishes[i].title,
+                        back: document.getElementById(`wish${i}Back`).value || STUDIO_CONFIG.defaultData.wishes[i].back
+                    });
+                }
+
+                // Collect memories
+                for (let i = 0; i < 6; i++) {
+                    data.memories.push({
+                        title: document.getElementById(`memory${i}Title`).value || STUDIO_CONFIG.defaultData.memories[i].title,
+                        description: document.getElementById(`memory${i}Desc`).value || STUDIO_CONFIG.defaultData.memories[i].description,
+                        image: document.getElementById(`memory${i}Image`).value || ''
+                    });
+                }
+
+                localStorage.setItem(STUDIO_CONFIG.storageKey, JSON.stringify(data));
+                alert('✅ All changes saved!');
+                updatePreview(data);
+            } catch (e) {
+                console.error('Save error:', e);
+                alert('❌ Error saving data');
+            }
+        }
+
+        // Individual updates
+        function updateRecipientName() {
+            const name = document.getElementById('recipientNameInput').value || 'Beautiful';
+            const data = getCurrentData();
+            data.recipientName = name;
+            localStorage.setItem(STUDIO_CONFIG.storageKey, JSON.stringify(data));
+            alert('✅ Recipient name updated!');
+            updatePreview(data);
+        }
+
+        function updateBirthdayMessage() {
+            const msg = document.getElementById('birthdayMessageInput').value;
+            if (!msg) {
+                alert('⚠️ Please enter a message');
+                return;
+            }
+            const data = getCurrentData();
+            data.birthdayMessage = msg;
+            localStorage.setItem(STUDIO_CONFIG.storageKey, JSON.stringify(data));
+            alert('✅ Birthday message updated!');
+            updatePreview(data);
+        }
+
+        function updateWishes() {
+            const data = getCurrentData();
+            data.wishes = [];
+            for (let i = 0; i < 4; i++) {
+                data.wishes.push({
+                    icon: document.getElementById(`wish${i}Icon`).value || STUDIO_CONFIG.defaultData.wishes[i].icon,
+                    title: document.getElementById(`wish${i}Title`).value || STUDIO_CONFIG.defaultData.wishes[i].title,
+                    back: document.getElementById(`wish${i}Back`).value || STUDIO_CONFIG.defaultData.wishes[i].back
+                });
+            }
+            localStorage.setItem(STUDIO_CONFIG.storageKey, JSON.stringify(data));
+            alert('✅ Wishes updated!');
+            updatePreview(data);
+        }
+
+        function updateMemories() {
+            const data = getCurrentData();
+            data.memories = [];
+            for (let i = 0; i < 6; i++) {
+                data.memories.push({
+                    title: document.getElementById(`memory${i}Title`).value || STUDIO_CONFIG.defaultData.memories[i].title,
+                    description: document.getElementById(`memory${i}Desc`).value || STUDIO_CONFIG.defaultData.memories[i].description,
+                    image: document.getElementById(`memory${i}Image`).value || ''
+                });
+            }
+            localStorage.setItem(STUDIO_CONFIG.storageKey, JSON.stringify(data));
+            alert('✅ Memories updated!');
+            updatePreview(data);
+        }
+
+        function updateFutureWish() {
+            const msg = document.getElementById('futureWishInput').value;
+            if (!msg) {
+                alert('⚠️ Please enter a message');
+                return;
+            }
+            const data = getCurrentData();
+            data.futureWish = msg;
+            localStorage.setItem(STUDIO_CONFIG.storageKey, JSON.stringify(data));
+            alert('✅ Future wish updated!');
+            updatePreview(data);
+        }
+
+        function updateClosingMessage() {
+            const msg = document.getElementById('closingMessageInput').value;
+            if (!msg) {
+                alert('⚠️ Please enter a message');
+                return;
+            }
+            const data = getCurrentData();
+            data.closingMessage = msg;
+            localStorage.setItem(STUDIO_CONFIG.storageKey, JSON.stringify(data));
+            alert('✅ Closing message updated!');
+            updatePreview(data);
+        }
+
+        function updateSettings() {
+            const data = getCurrentData();
+            data.settings = {
+                music: document.getElementById('musicEnabled').checked,
+                effects: document.getElementById('effectsEnabled').checked,
+                reducedMotion: document.getElementById('reducedMotion').checked
+            };
+            localStorage.setItem(STUDIO_CONFIG.storageKey, JSON.stringify(data));
+            alert('✅ Settings updated!');
+        }
+
+        function resetAllSettings() {
+            if (!confirm('⚠️ Are you sure? This will reset everything to default values.')) {
+                return;
+            }
+            try {
+                localStorage.removeItem(STUDIO_CONFIG.storageKey);
+                loadAllData();
+                alert('✅ Everything reset to default!');
+            } catch (e) {
+                console.error('Reset error:', e);
+                alert('❌ Error resetting');
+            }
+        }
+
+        function getCurrentData() {
+            try {
+                const stored = localStorage.getItem(STUDIO_CONFIG.storageKey);
+                return stored ? JSON.parse(stored) : JSON.parse(JSON.stringify(STUDIO_CONFIG.defaultData));
+            } catch (e) {
+                return JSON.parse(JSON.stringify(STUDIO_CONFIG.defaultData));
+            }
+        }
+
+        function updatePreview(data) {
+            document.getElementById('previewRecipient').textContent = data.recipientName;
+            const msgPreview = data.birthdayMessage.substring(0, 80) + '...';
+            document.getElementById('previewMessage').textContent = msgPreview;
+            document.getElementById('previewWishes').textContent = data.wishes.length + ' wishes configured';
+            document.getElementById('previewMemories').textContent = data.memories.length + ' memories configured';
+        }
+
+        // Init music controls
+        function initStudioMusic() {
+            const toggleBtn = document.getElementById('musicToggle');
+            const volumeSlider = document.getElementById('musicVolume');
+            const audio = document.getElementById('backgroundMusic');
+
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', () => {
+                    try {
+                        if (audio.paused) {
+                            audio.play().catch(err => console.warn('Autoplay blocked:', err));
+                        } else {
+                            audio.pause();
+                        }
+                    } catch (e) {
+                        console.error('Music error:', e);
+                    }
+                });
+            }
+
+            if (volumeSlider && audio) {
+                volumeSlider.addEventListener('change', (e) => {
+                    audio.volume = e.target.value / 100;
+                });
+            }
+        }
+
+        // Init stars (background)
+        function initStudioStars() {
+            const starsContainer = document.querySelector('.stars-container');
+            if (!starsContainer) return;
+
+            const starCount = 50;
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+
+        // Load on page load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => {
+                loadAllData();
+                initStudioMusic();
+                initStudioStars();
+            });
+        } else {
+            loadAllData();
+            initStudioMusic();
+            initStudioStars();
+        }
+    </script>
+
+</body>
+</html>
