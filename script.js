@@ -1,10 +1,10 @@
 /* ================================================================
-   DELICATE UNIVERSE - JAVASCRIPT
+   DELICATE UNIVERSE - JAVASCRIPT (FIXED)
    Premium Interactive Birthday Experience
    ================================================================ */
 
 // ================================================================
-// 1. DOM REFERENCES & CONFIGURATION
+// 1. CONFIG & STATE MANAGEMENT
 // ================================================================
 
 const CONFIG = {
@@ -22,12 +22,12 @@ const CONFIG = {
             { icon: '💝', title: 'Memories', back: 'May you create beautiful memories that last a lifetime.' }
         ],
         memories: [
-            { title: 'First Moment', description: 'A cherished beginning' },
-            { title: 'Special Times', description: 'Unforgettable moments' },
-            { title: 'Beautiful Days', description: 'Shared joy and laughter' },
-            { title: 'Precious Times', description: 'Moments to treasure' },
-            { title: 'Happy Memories', description: 'Worth remembering forever' },
-            { title: 'Next Chapter', description: 'Bright future ahead' }
+            { title: 'First Moment', description: 'A cherished beginning', image: '' },
+            { title: 'Special Times', description: 'Unforgettable moments', image: '' },
+            { title: 'Beautiful Days', description: 'Shared joy and laughter', image: '' },
+            { title: 'Precious Times', description: 'Moments to treasure', image: '' },
+            { title: 'Happy Memories', description: 'Worth remembering forever', image: '' },
+            { title: 'Next Chapter', description: 'Bright future ahead', image: '' }
         ],
         settings: {
             music: true,
@@ -37,100 +37,111 @@ const CONFIG = {
     }
 };
 
-// State management
 let state = {
     currentPage: 1,
     selectedName: 'Beautiful',
     loading: true,
     musicPlaying: false,
-    data: JSON.parse(JSON.stringify(CONFIG.defaultData))
+    data: {}
 };
 
+// Initialize state with data from localStorage
+function initializeState() {
+    try {
+        const stored = localStorage.getItem(CONFIG.storageKey);
+        if (stored) {
+            state.data = JSON.parse(stored);
+        } else {
+            state.data = JSON.parse(JSON.stringify(CONFIG.defaultData));
+        }
+    } catch (e) {
+        console.error('State init error:', e);
+        state.data = JSON.parse(JSON.stringify(CONFIG.defaultData));
+    }
+    state.selectedName = state.data.recipientName;
+}
+
 // ================================================================
-// 2. SAFE DOM QUERIES
+// 2. SAFE DOM QUERY HELPERS
 // ================================================================
 
-const querySelector = (selector) => {
+const qs = (sel) => {
     try {
-        return document.querySelector(selector);
+        return document.querySelector(sel);
     } catch (e) {
-        console.error('Query selector error:', selector);
+        console.error('Query error:', sel, e);
         return null;
     }
 };
 
-const querySelectorAll = (selector) => {
+const qsa = (sel) => {
     try {
-        return document.querySelectorAll(selector);
+        return document.querySelectorAll(sel);
     } catch (e) {
-        console.error('Query selector all error:', selector);
+        console.error('Query all error:', sel, e);
         return [];
     }
 };
 
-// Cache commonly used elements
-const elements = {
-    loadingScreen: querySelector('#loadingScreen'),
-    loadingProgress: querySelector('#loadingProgress'),
-    musicToggle: querySelector('#musicToggle'),
-    musicVolume: querySelector('#musicVolume'),
-    pageProgress: querySelector('#pageProgress'),
-    progressBar: querySelector('#progressBar'),
-    pageCounter: querySelector('#pageCounter'),
-    currentPageNumber: querySelector('#currentPageNumber'),
-    experienceContainer: querySelector('.experience-container'),
-    backgroundMusic: querySelector('#backgroundMusic'),
-    birthdayEffects: querySelector('#birthdayEffects')
-};
+const byId = (id) => document.getElementById(id);
 
 // ================================================================
-// 3. LOCAL STORAGE HELPERS
+// 3. CACHED ELEMENTS
 // ================================================================
 
-function loadData() {
+let elements = {};
+
+function cacheElements() {
+    elements = {
+        loadingScreen: qs('#loadingScreen'),
+        loadingProgress: qs('#loadingProgress'),
+        musicToggle: qs('#musicToggle'),
+        musicVolume: qs('#musicVolume'),
+        pageProgress: qs('#pageProgress'),
+        progressBar: qs('#progressBar'),
+        pageCounter: qs('#pageCounter'),
+        experienceContainer: qs('.experience-container'),
+        backgroundMusic: qs('#backgroundMusic'),
+        birthdayEffects: qs('#birthdayEffects')
+    };
+}
+
+// ================================================================
+// 4. DATA PERSISTENCE
+// ================================================================
+
+function saveDataToStorage() {
+    try {
+        localStorage.setItem(CONFIG.storageKey, JSON.stringify(state.data));
+        return true;
+    } catch (e) {
+        console.error('Save error:', e);
+        return false;
+    }
+}
+
+function loadDataFromStorage() {
     try {
         const stored = localStorage.getItem(CONFIG.storageKey);
         if (stored) {
-            const parsed = JSON.parse(stored);
-            state.data = { ...CONFIG.defaultData, ...parsed };
+            state.data = JSON.parse(stored);
             return true;
         }
     } catch (e) {
-        console.error('LocalStorage read error:', e);
+        console.error('Load error:', e);
     }
     state.data = JSON.parse(JSON.stringify(CONFIG.defaultData));
     return false;
 }
 
-function saveData() {
-    try {
-        localStorage.setItem(CONFIG.storageKey, JSON.stringify(state.data));
-        return true;
-    } catch (e) {
-        console.error('LocalStorage write error:', e);
-        return false;
-    }
-}
-
-function clearData() {
-    try {
-        localStorage.removeItem(CONFIG.storageKey);
-        state.data = JSON.parse(JSON.stringify(CONFIG.defaultData));
-        return true;
-    } catch (e) {
-        console.error('LocalStorage clear error:', e);
-        return false;
-    }
-}
-
 // ================================================================
-// 4. LOADING SCREEN
+// 5. LOADING SCREEN
 // ================================================================
 
 function initLoading() {
-    if (!elements.loadingScreen) return;
+    const screen = elements.loadingScreen;
+    if (!screen) return;
 
-    // Simulate loading progress
     let progress = 0;
     const interval = setInterval(() => {
         progress += Math.random() * 30;
@@ -141,7 +152,6 @@ function initLoading() {
         }
     }, 300);
 
-    // Complete loading after delay
     setTimeout(() => {
         clearInterval(interval);
         if (elements.loadingProgress) {
@@ -149,333 +159,291 @@ function initLoading() {
         }
         
         setTimeout(() => {
-            hideLoading();
+            if (screen) screen.classList.add('hidden');
             state.loading = false;
         }, 300);
     }, 1500);
 }
 
-function hideLoading() {
-    if (!elements.loadingScreen) return;
-    elements.loadingScreen.classList.add('hidden');
-}
-
 // ================================================================
-// 5. PAGE NAVIGATION
+// 6. PAGE NAVIGATION
 // ================================================================
 
-function goToPage(pageNumber) {
-    if (pageNumber < 1 || pageNumber > CONFIG.totalPages) return;
-    if (pageNumber === state.currentPage) return;
+function goToPage(pageNum) {
+    if (pageNum < 1 || pageNum > CONFIG.totalPages) return;
+    if (pageNum === state.currentPage) return;
 
-    // Hide current page
-    const currentPageEl = querySelector(`[data-page="${state.currentPage}"]`);
-    if (currentPageEl) {
-        currentPageEl.classList.remove('active');
-    }
+    // Hide current
+    const current = qs(`[data-page="${state.currentPage}"]`);
+    if (current) current.classList.remove('active');
 
     // Update state
-    state.currentPage = pageNumber;
+    state.currentPage = pageNum;
 
-    // Show new page
-    const newPageEl = querySelector(`[data-page="${pageNumber}"]`);
-    if (newPageEl) {
-        newPageEl.classList.add('active');
-    }
+    // Show new
+    const next = qs(`[data-page="${pageNum}"]`);
+    if (next) next.classList.add('active');
 
-    // Update progress
     updateProgress();
-
-    // Scroll to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 function updateProgress() {
-    const percentage = (state.currentPage / CONFIG.totalPages) * 100;
+    const percent = (state.currentPage / CONFIG.totalPages) * 100;
     
     if (elements.progressBar) {
-        elements.progressBar.style.width = percentage + '%';
+        elements.progressBar.style.width = percent + '%';
     }
 
     if (elements.pageCounter) {
-        const currentSpan = elements.pageCounter.querySelector('.current');
-        const totalSpan = elements.pageCounter.querySelector('.total');
-        if (currentSpan) currentSpan.textContent = state.currentPage;
-        if (totalSpan) totalSpan.textContent = CONFIG.totalPages;
-    }
-
-    if (elements.currentPageNumber) {
-        elements.currentPageNumber.textContent = state.currentPage;
+        const curr = elements.pageCounter.querySelector('.current');
+        const total = elements.pageCounter.querySelector('.total');
+        if (curr) curr.textContent = state.currentPage;
+        if (total) total.textContent = CONFIG.totalPages;
     }
 }
 
 // ================================================================
-// 6. NAME SELECTION & RECIPIENT
+// 7. NAME SELECTION
 // ================================================================
 
 function initNameSelection() {
-    const nameOptions = querySelectorAll('.name-option');
-    const customNameBtn = querySelector('#useCustomNameBtn');
-    const customNameInput = querySelector('#customNameInput');
+    const options = qsa('.name-option');
+    const customBtn = byId('useCustomNameBtn');
+    const customInput = byId('customNameInput');
 
-    nameOptions.forEach(btn => {
-        if (btn) {
-            btn.addEventListener('click', function() {
-                nameOptions.forEach(b => {
-                    if (b) b.classList.remove('selected');
-                });
-                this.classList.add('selected');
-                state.selectedName = this.getAttribute('data-name');
-                updateNamePreview();
-            });
-        }
+    options.forEach(btn => {
+        btn.addEventListener('click', function() {
+            options.forEach(b => b.classList.remove('selected'));
+            this.classList.add('selected');
+            state.selectedName = this.getAttribute('data-name');
+            state.data.recipientName = state.selectedName;
+            updateNameDisplay();
+        });
     });
 
-    if (customNameBtn && customNameInput) {
-        customNameBtn.addEventListener('click', function() {
-            const name = customNameInput.value.trim();
+    if (customBtn && customInput) {
+        customBtn.addEventListener('click', () => {
+            const name = customInput.value.trim();
             if (name) {
                 state.selectedName = name;
-                nameOptions.forEach(b => {
-                    if (b) b.classList.remove('selected');
-                });
-                updateNamePreview();
+                state.data.recipientName = name;
+                options.forEach(b => b.classList.remove('selected'));
+                updateNameDisplay();
             }
         });
 
-        customNameInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                customNameBtn.click();
-            }
+        customInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') customBtn.click();
         });
     }
 
-    updateNamePreview();
+    updateNameDisplay();
 }
 
-function updateNamePreview() {
-    const preview = querySelector('#selectedNamePreview');
+function updateNameDisplay() {
+    const preview = qs('#selectedNamePreview');
     if (preview) {
         preview.textContent = `For ${state.selectedName} ❤️`;
     }
-    setRecipientName(state.selectedName);
+    updateRecipientNameEverywhere(state.selectedName);
 }
 
-function setRecipientName(name) {
-    const recipientElements = querySelectorAll('[data-recipient-name]');
-    recipientElements.forEach(el => {
-        if (el) el.textContent = name;
+function updateRecipientNameEverywhere(name) {
+    qsa('[data-recipient-name]').forEach(el => {
+        el.textContent = name;
     });
 }
 
 // ================================================================
-// 7. BUTTON NAVIGATION
+// 8. NAVIGATION BUTTONS
 // ================================================================
 
 function initNavigation() {
-    const navButtons = querySelectorAll('[data-next]');
-    navButtons.forEach(btn => {
-        if (btn) {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                const nextPage = parseInt(this.getAttribute('data-next'));
-                goToPage(nextPage);
-            });
-        }
+    qsa('[data-next]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const nextPage = parseInt(btn.getAttribute('data-next'));
+            goToPage(nextPage);
+        });
     });
 
-    // Replay and back buttons
-    const replayBtn = querySelector('#replayExperienceBtn');
+    const replayBtn = byId('replayExperienceBtn');
     if (replayBtn) {
         replayBtn.addEventListener('click', () => {
             resetExperience();
-            goToPage(1);
         });
     }
 
-    const backBtn = querySelector('#backToBeginningBtn');
+    const backBtn = byId('backToBeginningBtn');
     if (backBtn) {
         backBtn.addEventListener('click', () => {
             resetExperience();
-            goToPage(1);
         });
     }
 }
 
 function resetExperience() {
-    // Reset page
-    state.currentPage = 1;
+    state.currentPage = 0;
 
-    // Reset wish cards
-    const wishCards = querySelectorAll('.wish-card');
-    wishCards.forEach(card => {
-        if (card) card.classList.remove('flipped');
+    qsa('.wish-card').forEach(card => {
+        card.classList.remove('flipped');
     });
 
-    // Reset cake
-    const flames = querySelectorAll('.flame');
-    flames.forEach(flame => {
-        if (flame) flame.classList.remove('extinguished');
+    qsa('.flame').forEach(flame => {
+        flame.classList.remove('extinguished');
     });
 
-    // Clear effects
     if (elements.birthdayEffects) {
         elements.birthdayEffects.innerHTML = '';
     }
 
-    // Update progress
+    goToPage(1);
     updateProgress();
 }
 
 // ================================================================
-// 8. WISH CARDS (3D FLIP)
+// 9. WISH CARDS (3D FLIP)
 // ================================================================
 
 function initWishCards() {
-    const wishCards = querySelectorAll('.wish-card');
-    wishCards.forEach(card => {
-        if (card) {
-            card.addEventListener('click', function() {
-                this.classList.toggle('flipped');
-            });
-        }
+    qsa('.wish-card').forEach(card => {
+        card.addEventListener('click', function() {
+            this.classList.toggle('flipped');
+        });
     });
 
-    // Populate wish cards from data
     populateWishCards();
 }
 
 function populateWishCards() {
-    const wishCards = querySelectorAll('.wish-card');
-    state.data.wishes.forEach((wish, index) => {
-        const card = wishCards[index];
-        if (!card) return;
+    const cards = qsa('.wish-card');
+    
+    state.data.wishes.forEach((wish, idx) => {
+        if (!cards[idx]) return;
 
+        const card = cards[idx];
         const icon = card.querySelector('.wish-icon');
-        const frontStrong = card.querySelector('.wish-card-front strong');
-        const backStrong = card.querySelector('.wish-card-back strong');
+        const frontTitle = card.querySelector('.wish-card-front strong');
+        const backText = card.querySelector('.wish-card-back strong');
 
         if (icon) icon.textContent = wish.icon;
-        if (frontStrong) frontStrong.textContent = wish.title;
-        if (backStrong) backStrong.textContent = wish.back;
+        if (frontTitle) frontTitle.textContent = wish.title;
+        if (backText) backText.textContent = wish.back;
     });
 }
 
 // ================================================================
-// 9. GALLERY / MEMORIES
+// 10. GALLERY / MEMORIES
 // ================================================================
 
 function initGallery() {
-    const memoryItems = querySelectorAll('.memory-item');
-    memoryItems.forEach((item, index) => {
-        if (item) {
-            const placeholder = item.querySelector('.memory-placeholder-title');
-            const desc = item.querySelector('.memory-placeholder-description');
+    const items = qsa('.memory-item');
+    
+    items.forEach((item, idx) => {
+        if (!state.data.memories[idx]) return;
 
-            if (state.data.memories[index]) {
-                const mem = state.data.memories[index];
-                if (placeholder) placeholder.textContent = mem.title;
-                if (desc) desc.textContent = mem.description;
+        const mem = state.data.memories[idx];
+        const placeholder = item.querySelector('.memory-placeholder');
+        const title = item.querySelector('.memory-placeholder-title');
+        const desc = item.querySelector('.memory-placeholder-description');
+
+        if (title) title.textContent = mem.title;
+        if (desc) desc.textContent = mem.description;
+
+        // If image exists, use it as background
+        if (mem.image && mem.image.trim()) {
+            if (placeholder) {
+                placeholder.style.backgroundImage = `url('${mem.image}')`;
+                placeholder.style.backgroundSize = 'cover';
+                placeholder.style.backgroundPosition = 'center';
             }
         }
     });
 }
 
 // ================================================================
-// 10. BIRTHDAY CAKE & CANDLES
+// 11. CAKE & CANDLES
 // ================================================================
 
 function initCake() {
-    const cake = querySelector('#birthdayCake');
-    const celebrateBtn = querySelector('#cakeCelebrateBtn');
+    const cake = byId('birthdayCake');
+    const celebrateBtn = byId('cakeCelebrateBtn');
 
     if (cake) {
-        cake.addEventListener('click', () => {
-            triggerCelebration();
-        });
+        cake.addEventListener('click', triggerCelebration);
     }
 
     if (celebrateBtn) {
-        celebrateBtn.addEventListener('click', () => {
-            triggerCelebration();
-        });
+        celebrateBtn.addEventListener('click', triggerCelebration);
     }
 
-    // Candle interactions
-    const candles = querySelectorAll('.candle');
-    candles.forEach(candle => {
-        if (candle) {
-            candle.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const flame = candle.querySelector('.flame');
-                if (flame) {
-                    flame.classList.toggle('extinguished');
-                }
-            });
-        }
+    qsa('.candle').forEach(candle => {
+        candle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const flame = candle.querySelector('.flame');
+            if (flame) {
+                flame.classList.toggle('extinguished');
+            }
+        });
     });
 }
 
 function triggerCelebration() {
-    // Trigger confetti
     createConfetti();
     createFireworks();
-    
-    // Scroll or animate to reveal
-    const revealBox = querySelector('#birthdayWishReveal');
-    if (revealBox) {
-        revealBox.style.animation = 'fadeInUp 0.8s ease forwards';
-    }
 }
 
 // ================================================================
-// 11. CONFETTI EFFECT
+// 12. CONFETTI
 // ================================================================
 
 function createConfetti() {
     const count = 50;
     for (let i = 0; i < count; i++) {
-        const confetti = document.createElement('div');
-        confetti.className = 'confetti';
-        confetti.style.left = Math.random() * 100 + '%';
-        confetti.style.backgroundColor = getRandomColor();
-        confetti.style.width = Math.random() * 8 + 4 + 'px';
-        confetti.style.height = confetti.style.width;
-        confetti.style.position = 'fixed';
-        confetti.style.pointerEvents = 'none';
-        confetti.style.zIndex = '200';
+        const conf = document.createElement('div');
+        conf.className = 'confetti';
+        conf.style.left = Math.random() * 100 + '%';
+        conf.style.top = '-10px';
+        conf.style.backgroundColor = getRandomColor();
+        conf.style.width = (Math.random() * 8 + 4) + 'px';
+        conf.style.height = conf.style.width;
+        conf.style.position = 'fixed';
+        conf.style.pointerEvents = 'none';
+        conf.style.zIndex = '200';
+        conf.style.borderRadius = '50%';
 
-        document.body.appendChild(confetti);
+        document.body.appendChild(conf);
 
-        // Animate
         const duration = Math.random() * 3 + 2;
         const startX = Math.random() * window.innerWidth;
         const endX = startX + (Math.random() - 0.5) * 200;
-        const startRotation = Math.random() * 360;
-        const endRotation = startRotation + Math.random() * 720;
+        const startRot = Math.random() * 360;
+        const endRot = startRot + Math.random() * 720;
 
         let startTime = Date.now();
-        function animateConfetti() {
+        
+        function animate() {
             const elapsed = Date.now() - startTime;
             const progress = elapsed / (duration * 1000);
 
             if (progress >= 1) {
-                confetti.remove();
+                conf.remove();
                 return;
             }
 
             const x = startX + (endX - startX) * progress;
             const y = window.innerHeight * progress;
-            const rotation = startRotation + (endRotation - startRotation) * progress;
+            const rot = startRot + (endRot - startRot) * progress;
 
-            confetti.style.left = x + 'px';
-            confetti.style.top = y + 'px';
-            confetti.style.transform = `rotate(${rotation}deg)`;
-            confetti.style.opacity = 1 - progress;
+            conf.style.left = x + 'px';
+            conf.style.top = y + 'px';
+            conf.style.transform = `rotate(${rot}deg)`;
+            conf.style.opacity = 1 - progress;
 
-            requestAnimationFrame(animateConfetti);
+            requestAnimationFrame(animate);
         }
-        animateConfetti();
+        animate();
     }
 }
 
@@ -485,156 +453,105 @@ function getRandomColor() {
 }
 
 // ================================================================
-// 12. FIREWORKS
+// 13. FIREWORKS
 // ================================================================
 
 function createFireworks() {
-    const fireworkCount = 3;
-    for (let i = 0; i < fireworkCount; i++) {
+    for (let i = 0; i < 3; i++) {
         setTimeout(() => {
             const x = Math.random() * window.innerWidth;
             const y = Math.random() * window.innerHeight * 0.5 + 100;
-            
             explodeFirework(x, y);
         }, i * 200);
     }
 }
 
 function explodeFirework(x, y) {
-    const particleCount = 30;
-    for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'firework';
-        particle.style.left = x + 'px';
-        particle.style.top = y + 'px';
-        particle.style.width = '4px';
-        particle.style.height = '4px';
-        particle.style.backgroundColor = getRandomColor();
-        particle.style.borderRadius = '50%';
-        particle.style.position = 'fixed';
-        particle.style.pointerEvents = 'none';
-        particle.style.zIndex = '200';
-        document.body.appendChild(particle);
+    const count = 30;
+    for (let i = 0; i < count; i++) {
+        const part = document.createElement('div');
+        part.className = 'firework';
+        part.style.left = x + 'px';
+        part.style.top = y + 'px';
+        part.style.width = '4px';
+        part.style.height = '4px';
+        part.style.backgroundColor = getRandomColor();
+        part.style.borderRadius = '50%';
+        part.style.position = 'fixed';
+        part.style.pointerEvents = 'none';
+        part.style.zIndex = '200';
+        document.body.appendChild(part);
 
-        const angle = (i / particleCount) * Math.PI * 2;
+        const angle = (i / count) * Math.PI * 2;
         const velocity = 5 + Math.random() * 5;
         const vx = Math.cos(angle) * velocity;
         const vy = Math.sin(angle) * velocity;
 
         let startTime = Date.now();
-        function animateFirework() {
+        
+        function animate() {
             const elapsed = Date.now() - startTime;
             const progress = elapsed / 1500;
 
             if (progress >= 1) {
-                particle.remove();
+                part.remove();
                 return;
             }
 
             const newX = x + vx * elapsed / 16;
             const newY = y + vy * elapsed / 16 + (elapsed / 16) * 0.1;
 
-            particle.style.left = newX + 'px';
-            particle.style.top = newY + 'px';
-            particle.style.opacity = 1 - progress;
+            part.style.left = newX + 'px';
+            part.style.top = newY + 'px';
+            part.style.opacity = 1 - progress;
 
-            requestAnimationFrame(animateFirework);
+            requestAnimationFrame(animate);
         }
-        animateFirework();
+        animate();
     }
 }
 
 // ================================================================
-// 13. PARTICLES (BACKGROUND)
-// ================================================================
-
-function initBackgroundParticles() {
-    const container = querySelector('.particles-container');
-    if (!container) return;
-
-    const particleCount = 20;
-    for (let i = 0; i < particleCount; i++) {
-        createBackgroundParticle(container);
-    }
-}
-
-function createBackgroundParticle(container) {
-    if (!container) return;
-
-    const particle = document.createElement('div');
-    particle.className = 'particle';
-    particle.style.width = Math.random() * 4 + 2 + 'px';
-    particle.style.height = particle.style.width;
-    particle.style.backgroundColor = 'rgba(255, 255, 255, ' + (Math.random() * 0.5 + 0.2) + ')';
-    particle.style.borderRadius = '50%';
-    particle.style.left = Math.random() * 100 + '%';
-    particle.style.top = Math.random() * 100 + '%';
-    particle.style.boxShadow = '0 0 10px rgba(255, 107, 157, 0.3)';
-
-    container.appendChild(particle);
-
-    let x = Math.random() * window.innerWidth;
-    let y = Math.random() * window.innerHeight;
-    let vx = (Math.random() - 0.5) * 0.5;
-    let vy = (Math.random() - 0.5) * 0.5 - 0.3;
-
-    function animate() {
-        x += vx;
-        y += vy;
-
-        if (x < 0 || x > window.innerWidth) vx *= -1;
-        if (y < 0 || y > window.innerHeight) vy *= -1;
-
-        particle.style.left = x + 'px';
-        particle.style.top = y + 'px';
-
-        requestAnimationFrame(animate);
-    }
-    animate();
-}
-
-// ================================================================
-// 14. STARS BACKGROUND
+// 14. STARS
 // ================================================================
 
 function initStars() {
-    const starsContainer = querySelector('.stars-container');
-    if (!starsContainer) return;
+    const container = qs('.stars-container');
+    if (!container) return;
 
-    const starCount = 50;
-    for (let i = 0; i < starCount; i++) {
+    for (let i = 0; i < 50; i++) {
         const star = document.createElement('div');
         star.className = 'star';
         star.style.left = Math.random() * 100 + '%';
         star.style.top = Math.random() * 100 + '%';
         star.style.animationDelay = Math.random() * 3 + 's';
-        starsContainer.appendChild(star);
+        container.appendChild(star);
     }
 }
 
 // ================================================================
-// 15. MUSIC CONTROLS
+// 15. MUSIC
 // ================================================================
 
 function initMusic() {
-    const toggleBtn = querySelector('#musicToggle');
-    const volumeSlider = querySelector('#musicVolume');
-    const audio = querySelector('#backgroundMusic');
+    const toggle = elements.musicToggle;
+    const volume = elements.musicVolume;
+    const audio = elements.backgroundMusic;
 
-    if (toggleBtn) {
-        toggleBtn.addEventListener('click', toggleMusic);
+    if (toggle) {
+        toggle.addEventListener('click', toggleMusic);
     }
 
-    if (volumeSlider && audio) {
-        volumeSlider.addEventListener('change', (e) => {
+    if (volume && audio) {
+        volume.addEventListener('change', (e) => {
             audio.volume = e.target.value / 100;
         });
-        audio.volume = volumeSlider.value / 100;
+        audio.volume = (volume.value || 50) / 100;
     }
 }
 
 function toggleMusic() {
-    const audio = querySelector('#backgroundMusic');
+    const audio = elements.backgroundMusic;
     if (!audio) return;
 
     try {
@@ -642,80 +559,62 @@ function toggleMusic() {
             audio.pause();
             state.musicPlaying = false;
         } else {
-            audio.play().catch(err => {
-                console.warn('Autoplay blocked:', err);
+            audio.play().catch(() => {
+                console.warn('Autoplay blocked');
             });
             state.musicPlaying = true;
         }
     } catch (e) {
-        console.error('Music control error:', e);
+        console.error('Music error:', e);
     }
 }
 
 // ================================================================
-// 16. CONTENT SYNCHRONIZATION
+// 16. CONTENT SYNC
 // ================================================================
 
-function syncContent() {
+function syncAllContent() {
     // Birthday message
-    const birthdayMsgEl = querySelector('[data-birthday-message]');
-    if (birthdayMsgEl) {
-        birthdayMsgEl.textContent = state.data.birthdayMessage;
-    }
+    qsa('[data-birthday-message]').forEach(el => {
+        el.textContent = state.data.birthdayMessage;
+    });
 
     // Future wish
-    const futureWishEl = querySelector('[data-future-wish]');
-    if (futureWishEl) {
-        futureWishEl.textContent = state.data.futureWish;
-    }
+    qsa('[data-future-wish]').forEach(el => {
+        el.textContent = state.data.futureWish;
+    });
 
     // Closing message
-    const closingMsgEl = querySelector('[data-closing-message]');
-    if (closingMsgEl) {
-        closingMsgEl.textContent = state.data.closingMessage;
-    }
+    qsa('[data-closing-message]').forEach(el => {
+        el.textContent = state.data.closingMessage;
+    });
 
     // Recipient name
-    setRecipientName(state.selectedName);
+    updateRecipientNameEverywhere(state.data.recipientName);
+
+    // Wishes
+    populateWishCards();
+
+    // Gallery
+    initGallery();
 }
 
 // ================================================================
-// 17. CONTENT EDITORS (STUDIO)
-// ================================================================
-
-function updateContentFromStudio() {
-    const birthdayInput = querySelector('.studio-birthday-message');
-    if (birthdayInput && birthdayInput.value) {
-        state.data.birthdayMessage = birthdayInput.value;
-    }
-
-    const futureInput = querySelector('.studio-future-wish');
-    if (futureInput && futureInput.value) {
-        state.data.futureWish = futureInput.value;
-    }
-
-    const closingInput = querySelector('.studio-closing-message');
-    if (closingInput && closingInput.value) {
-        state.data.closingMessage = closingInput.value;
-    }
-
-    syncContent();
-}
-
-// ================================================================
-// 18. INITIALIZATION
+// 17. INITIALIZATION
 // ================================================================
 
 function init() {
-    // Load data from storage
-    loadData();
+    // Initialize state first
+    initializeState();
+    loadDataFromStorage();
 
-    // Initialize page
-    goToPage(1);
-    updateProgress();
+    // Cache elements
+    cacheElements();
 
-    // Init features
+    // Start loading
     initLoading();
+
+    // Init all features
     initNameSelection();
     initNavigation();
     initWishCards();
@@ -723,21 +622,17 @@ function init() {
     initCake();
     initMusic();
     initStars();
-    initBackgroundParticles();
 
-    // Sync content
-    syncContent();
+    // Go to first page
+    goToPage(1);
+    updateProgress();
 
-    // Handle page visibility
-    document.addEventListener('visibilitychange', () => {
-        if (!document.hidden && elements.backgroundMusic) {
-            // Resume if needed
-        }
-    });
+    // Sync all content
+    syncAllContent();
 }
 
 // ================================================================
-// 19. DOM READY
+// 18. DOM READY
 // ================================================================
 
 if (document.readyState === 'loading') {
@@ -747,13 +642,13 @@ if (document.readyState === 'loading') {
 }
 
 // ================================================================
-// 20. ERROR HANDLING
+// 19. ERROR HANDLING
 // ================================================================
 
 window.addEventListener('error', (e) => {
-    console.error('Global error:', e.error);
+    console.error('Error:', e.error);
 });
 
 window.addEventListener('unhandledrejection', (e) => {
-    console.error('Unhandled promise rejection:', e.reason);
+    console.error('Promise rejection:', e.reason);
 });
