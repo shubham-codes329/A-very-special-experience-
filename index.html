@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Delicate Universe - A premium interactive birthday experience">
+    <meta name="theme-color" content="#080511">
+    <title>Delicate Universe ❤️</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-container">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">Preparing your universe...</p>
+            <div class="loading-progress-bar">
+                <div id="loadingProgress" class="loading-progress-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Background Effects -->
+    <div id="backgroundEffects" class="background-effects">
+        <div class="aurora"></div>
+        <div class="stars-container"></div>
+        <div class="particles-container"></div>
+    </div>
+
+    <!-- Music Controls -->
+    <div class="music-controls">
+        <button id="musicToggle" type="button" class="music-btn" aria-label="Toggle music">
+            <span class="music-icon">🎵</span>
+        </button>
+        <input id="musicVolume" type="range" min="0" max="100" value="50" class="volume-slider" aria-label="Music volume">
+    </div>
+
+    <!-- Page Progress -->
+    <div id="pageProgress" class="page-progress">
+        <div id="progressBar" class="progress-bar"></div>
+        <div id="pageCounter" class="page-counter">
+            <span class="current">1</span> / <span class="total">12</span>
+        </div>
+    </div>
+
+    <!-- Main Experience Container -->
+    <main class="experience-container">
+
+        <!-- PAGE 1: Welcome / Personalization -->
+        <div class="experience-page" data-page="1">
+            <div class="page-content">
+                <div class="welcome-header">
+                    <h1 class="welcome-title">Delicate Universe</h1>
+                    <p class="welcome-subtitle">Some experiences are meant to be opened slowly.</p>
+                </div>
+
+                <div class="name-selection-card">
+                    <p class="name-selection-label">Who is this for?</p>
+                    <div class="name-options">
+                        <button type="button" class="name-option" data-name="Delicate">Delicate ✨</button>
+                        <button type="button" class="name-option" data-name="Beautiful">Beautiful 💫</button>
+                        <button type="button" class="name-option" data-name="Sunshine">Sunshine 🌟</button>
+                        <button type="button" class="name-option" data-name="Special">Special 💝</button>
+                    </div>
+                    <div id="selectedNamePreview" class="selected-name-preview"></div>
+                </div>
+
+                <div class="custom-name-input-container">
+                    <input type="text" id="customNameInput" class="custom-name-input" placeholder="Or enter a custom name..." maxlength="30">
+                    <button type="button" id="useCustomNameBtn" class="custom-name-btn">Use This Name</button>
+                </div>
+
+                <button id="openSurpriseBtn" type="button" class="action-button primary-button" data-next="2">
+                    Open Your Surprise ✨
+                </button>
+
+                <div class="welcome-footer">
+                    <p class="footer-text">Or visit <a href="studio.html" class="footer-link">Studio</a> to customize</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAGE 2: Name Reveal -->
+        <div class="experience-page" data-page="2">
+            <div class="page-content">
+                <div class="name-reveal-container">
+                    <p class="name-reveal-prefix">Welcome</p>
+                    <div class="name-reveal-box">
+                        <h2 id="revealName" class="reveal-name-text">
+                            <span data-recipient-name>Beautiful</span>
+                        </h2>
+                    </div>
+                    <p class="name-reveal-suffix">Your universe awaits ❤️</p>
+                </div>
+
+                <button type="button" class="action-button primary-button" data-next="3">
+                    Continue ✨
+                </button>
+            </div>
+        </div>
+
+        <!-- PAGE 3: Birthday Hero -->
+        <div class="experience-page" data-page="3">
+            <div class="page-content">
+                <div class="hero-section">
+                    <div class="hero-trophy">🎂</div>
+                    <h1 class="hero-title">Happy Birthday</h1>
+                    <h2 class="hero-recipient">
+                        <span data-recipient-name>Beautiful</span>
+                    </h2>
+                    <p class="hero-subtitle">A celebration of you, your light, and your beautiful presence in this universe.</p>
+                </div>
+
+                <button type="button" class="action-button primary-button" data-next="4">
+                    Next ✨
+                </button>
+            </div>
+        </div>
+
+        <!-- PAGE 4: Birthday Message -->
+        <div class="experience-page" data-page="4">
+            <div class="page-content">
+                <div class="message-card">
+                    <h3 class="message-title">A Message For You</h3>
+                    <div class="message-body">
+                        <p data-birthday-message class="studio-birthday-message">
+                            May this new year of your life bring you countless moments worth remembering, dreams worth chasing, and a heart full of joy. You deserve all the beautiful things this world has to offer.
+                        </p>
+                    </div>
+                </div>
+
+                <button type="button" class="action-button primary-button" data-next="5">
+                    Next ✨
+                </button>
+            </div>
+        </div>
+
+        <!-- PAGE 5: Wish Cards -->
+        <div class="experience-page" data-page="5">
+            <div class="page-content">
+                <h2 class="section-title">Wishes For You</h2>
+                <p class="section-subtitle">Click each card to reveal a wish</p>
+
+                <div class="wishes-grid">
+                    <div class="wish-card" data-wish-card="0">
+                        <div class="wish-card-inner">
+                            <div class="wish-card-front">
+                                <div class="wish-icon">💫</div>
+                                <strong>Happiness</strong>
+                                <small>Click to reveal</small>
+                            </div>
+                            <div class="wish-card-back">
+                                <strong>May your days be filled with genuine laughter and pure joy.</strong>
+                                <span>Wish Card</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="wish-card" data-wish-card="1">
+                        <div class="wish-card-inner">
+                            <div class="wish-card-front">
+                                <div class="wish-icon">🎯</div>
+                                <strong>Success</strong>
+                                <small>Click to reveal</small>
+                            </div>
+                            <div class="wish-card-back">
+                                <strong>May every goal you chase become a victory you celebrate.</strong>
+                                <span>Wish Card</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="wish-card" data-wish-card="2">
+                        <div class="wish-card-inner">
+                            <div class="wish-card-front">
+                                <div class="wish-icon">✨</div>
+                                <strong>Dreams</strong>
+                                <small>Click to reveal</small>
+                            </div>
+                            <div class="wish-card-back">
+                                <strong>May your wildest dreams find their way into reality.</strong>
+                                <span>Wish Card</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="wish-card" data-wish-card="3">
+                        <div class="wish-card-inner">
+                            <div class="wish-card-front">
+                                <div class="wish-icon">💝</div>
+                                <strong>Memories</strong>
+                                <small>Click to reveal</small>
+                            </div>
+                            <div class="wish-card-back">
+                                <strong>May you create beautiful memories that last a lifetime.</strong>
+                                <span>Wish Card</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="action-button primary-button" data-next="6">
+                    Next ✨
+                </button>
+            </div>
+        </div>
+
+        <!-- PAGE 6: Memory Gallery -->
+        <div class="experience-page" data-page="6">
+            <div class="page-content">
+                <h2 class="section-title">Your Memories</h2>
+                <p class="section-subtitle">Moments that matter</p>
+
+                <div class="gallery-grid">
+                    <div class="memory-item" data-gallery-index="0">
+                        <div class="memory-placeholder">
+                            <div class="memory-number">01</div>
+                            <p class="memory-placeholder-title">First Moment</p>
+                            <p class="memory-placeholder-description">A cherished beginning</p>
+                        </div>
+                    </div>
+
+                    <div class="memory-item" data-gallery-index="1">
+                        <div class="memory-placeholder">
+                            <div class="memory-number">02</div>
+                            <p class="memory-placeholder-title">Special Times</p>
+                            <p class="memory-placeholder-description">Unforgettable moments</p>
+                        </div>
+                    </div>
+
+                    <div class="memory-item" data-gallery-index="2">
+                        <div class="memory-placeholder">
+                            <div class="memory-number">03</div>
+                            <p class="memory-placeholder-title">Beautiful Days</p>
+                            <p class="memory-placeholder-description">Shared joy and laughter</p>
+                        </div>
+                    </div>
+
+                    <div class="memory-item" data-gallery-index="3">
+                        <div class="memory-placeholder">
+                            <div class="memory-number">04</div>
+                            <p class="memory-placeholder-title">Precious Times</p>
+                            <p class="memory-placeholder-description">Moments to treasure</p>
+                        </div>
+                    </div>
+
+                    <div class="memory-item" data-gallery-index="4">
+                        <div class="memory-placeholder">
+                            <div class="memory-number">05</div>
+                            <p class="memory-placeholder-title">Happy Memories</p>
+                            <p class="memory-placeholder-description">Worth remembering forever</p>
+                        </div>
+                    </div>
+
+                    <div class="memory-item" data-gallery-index="5">
+                        <div class="memory-placeholder">
+                            <div class="memory-number">06</div>
+                            <p class="memory-placeholder-title">Next Chapter</p>
+                            <p class="memory-placeholder-description">Bright future ahead</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="button" class="action-button primary-button" data-next="7">
+                    Next ✨
+                </button>
+            </div>
+        </div>
+
+        <!-- PAGE 7: Birthday Cake -->
+        <div class="experience-page" data-page="7">
+            <div class="page-content">
+                <h2 class="section-title">Make A Wish</h2>
+
+                <div class="cake-container">
+                    <div id="birthdayCake" class="birthday-cake">
+                        <!-- Cake layers -->
+                        <div class="cake-layer bottom-layer"></div>
+                        <div class="cake-layer middle-layer"></div>
+                        <div class="cake-layer top-layer"></div>
+
+                        <!-- Candles -->
+                        <div class="candles-container">
+                            <div class="candle" data-candle="0">
+                                <div class="candle-body"></div>
+                                <div class="flame"></div>
+                            </div>
+                            <div class="candle" data-candle="1">
+                                <div class="candle-body"></div>
+                                <div class="flame"></div>
+                            </div>
+                            <div class="candle" data-candle="2">
+                                <div class="candle-body"></div>
+                                <div class="flame"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <p id="candleInstruction" class="candle-instruction">Click the candles or the cake to celebrate</p>
+
+                <button id="cakeCelebrateBtn" type="button" class="action-button primary-button">
+                    🎉 Celebrate
+                </button>
+            </div>
+        </div>
+
+        <!-- PAGE 8: Birthday Wish Reveal -->
+        <div class="experience-page" data-page="8">
+            <div class="page-content">
+                <div class="wish-reveal-container">
+                    <div id="birthdayWishReveal" class="wish-reveal-box">
+                        <h2 class="wish-reveal-title">Your Birthday Wish</h2>
+                        <p class="wish-reveal-text">
+                            May every candle you blew bring you one step closer to your dreams. You are worthy of every good thing coming your way.
+                        </p>
+                        <div id="birthdayEffects" class="birthday-effects"></div>
+                    </div>
+                </div>
+
+                <button type="button" class="action-button primary-button" data-next="9">
+                    Next ✨
+                </button>
+            </div>
+        </div>
+
+        <!-- PAGE 9: Feeling / Appreciation -->
+        <div class="experience-page" data-page="9">
+            <div class="page-content">
+                <div id="feelingReveal" class="feeling-container">
+                    <h2 class="feeling-title">A Thought</h2>
+                    <p class="feeling-text">
+                        Some people simply make ordinary moments feel a little brighter, ordinary days feel a little warmer, and ordinary conversations feel a little more meaningful. You are one of those people.
+                    </p>
+                </div>
+
+                <button type="button" class="action-button primary-button" data-next="10">
+                    Next ✨
+                </button>
+            </div>
+        </div>
+
+        <!-- PAGE 10: Future Wish -->
+        <div class="experience-page" data-page="10">
+            <div class="page-content">
+                <div class="future-wish-container">
+                    <div class="cosmic-background">
+                        <div class="orbiting-element"></div>
+                    </div>
+                    <h2 class="future-wish-title">A Hope For Tomorrow</h2>
+                    <p data-future-wish class="future-wish-text studio-future-wish">
+                        May the days ahead open doors to things you have always hoped for. May your path be filled with unexpected joy and discoveries that take your breath away.
+                    </p>
+                </div>
+
+                <button type="button" class="action-button primary-button" data-next="11">
+                    Next ✨
+                </button>
+            </div>
+        </div>
+
+        <!-- PAGE 11: Closing Message -->
+        <div class="experience-page" data-page="11">
+            <div class="page-content">
+                <div class="closing-container">
+                    <div class="closing-stars"></div>
+                    <h2 class="closing-title">A Final Word</h2>
+                    <p data-closing-message class="closing-text studio-closing-message">
+                        Thank you for being exactly who you are. The world is brighter because you are in it. Here's to your most beautiful year yet. Happy Birthday. 🎂✨
+                    </p>
+                </div>
+
+                <button type="button" class="action-button primary-button" data-next="12">
+                    Next ✨
+                </button>
+            </div>
+        </div>
+
+        <!-- PAGE 12: Final Celebration / Replay -->
+        <div class="experience-page" data-page="12">
+            <div class="page-content">
+                <div class="final-celebration">
+                    <h1 class="final-title">Until the next beautiful moment ✨</h1>
+                    <p class="final-subtitle">Thank you for experiencing this universe with us.</p>
+
+                    <div class="final-buttons">
+                        <button id="replayExperienceBtn" type="button" class="action-button primary-button">
+                            Experience Again 🔄
+                        </button>
+                        <button id="backToBeginningBtn" type="button" class="action-button secondary-button">
+                            Back to Start
+                        </button>
+                    </div>
+
+                    <p class="final-footer">
+                        <a href="studio.html" class="footer-link">Customize this experience</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Hidden audio element for music -->
+    <audio id="backgroundMusic" preload="none">
+        <source src="birthday-music.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
